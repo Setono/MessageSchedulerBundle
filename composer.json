@@ -1,0 +1,60 @@
+{
+    "name": "setono/message-scheduler-bundle",
+    "type": "symfony-bundle",
+    "description": "Schedule Symfony Messenger messages in the future",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joachim Løvgaard",
+            "email": "joachim@loevgaard.dk"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "doctrine/doctrine-bundle": "^2.1",
+        "doctrine/orm": "^2.7",
+        "doctrine/persistence": "^1.0 || ^2.0",
+        "ramsey/uuid": "^3.0 || ^4.0",
+        "symfony/config": "^4.4 || ^5.0",
+        "symfony/console": "^4.4 || ^5.0",
+        "symfony/dependency-injection": "^4.4 || ^5.0",
+        "symfony/framework-bundle": "^4.4 || ^5.0",
+        "symfony/http-kernel": "^4.4 || ^5.0",
+        "symfony/messenger": "^4.4 || ^5.0",
+        "symfony/workflow": "^4.4 || ^5.0",
+        "thecodingmachine/safe": "^1.1",
+        "webmozart/assert": "^1.0"
+    },
+    "require-dev": {
+        "matthiasnoback/symfony-dependency-injection-test": "^4.1",
+        "nyholm/symfony-bundle-test": "^1.6",
+        "phpunit/phpunit": "^8.5",
+        "roave/security-advisories": "dev-master",
+        "setono/code-quality-pack": "^1.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Setono\\MessageSchedulerBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Setono\\MessageSchedulerBundle\\Tests\\": "tests/"
+        }
+    },
+    "prefer-stable": true,
+    "scripts": {
+        "analyse": "vendor/bin/phpstan analyse -c phpstan.neon -l max src/",
+        "check-style": "vendor/bin/ecs check src/ tests/",
+        "fix-style": "vendor/bin/ecs check --fix src/ tests/",
+        "phpunit": "vendor/bin/phpunit"
+    }
+}

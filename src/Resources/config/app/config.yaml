@@ -1,0 +1,32 @@
+framework:
+    messenger:
+        buses:
+            setono_message_scheduler.command_bus: ~
+    workflows:
+        scheduled_message:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - Setono\MessageSchedulerBundle\Entity\ScheduledMessage
+            initial_marking: pending
+            places:
+                - pending
+                - dispatched
+                - processing
+                - failed
+                - succesful
+            transitions:
+                dispatch:
+                    from: pending
+                    to: dispatched
+                process:
+                    from: dispatched
+                    to: processing
+                fail:
+                    from: processing
+                    to: failed
+                succeed:
+                    from: processing
+                    to:  succesful

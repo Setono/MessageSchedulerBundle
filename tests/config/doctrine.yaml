@@ -1,0 +1,7 @@
+doctrine:
+    dbal:
+        url: 'mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7'
+    orm:
+        auto_generate_proxy_classes: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
