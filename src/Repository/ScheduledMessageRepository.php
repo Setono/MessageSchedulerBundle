@@ -9,9 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Safe\DateTime;
 use Setono\MessageSchedulerBundle\Entity\ScheduledMessage;
 
-/**
- * @extends \Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository<ScheduledMessage>
- */
 class ScheduledMessageRepository extends ServiceEntityRepository implements ScheduledMessageRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)

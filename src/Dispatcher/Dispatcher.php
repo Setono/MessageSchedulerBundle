@@ -6,6 +6,7 @@ namespace Setono\MessageSchedulerBundle\Dispatcher;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use LogicException;
 use RuntimeException;
 use function Safe\sprintf;
 use Setono\MessageSchedulerBundle\Message\Command\DispatchMessage;
@@ -65,20 +66,34 @@ final class Dispatcher implements DispatcherInterface
     /**
      * This method presumes that all the objects are of the same class
      * therefore it returns the workflow for the first object
+     *
+     * @param object[] $objects
      */
     private function getWorkflow(array $objects): Workflow
     {
-        return $this->workflowRegistry->get(current($objects), ScheduledMessageWorkflow::NAME);
+        $obj = current($objects);
+        if (false === $obj) {
+            throw new LogicException('An empty array of objects were passed to this method');
+        }
+
+        return $this->workflowRegistry->get($obj, ScheduledMessageWorkflow::NAME);
     }
 
     /**
      * This method presumes that all the objects are of the same class
      * therefore it returns the object manager for the first object's class
+     *
+     * @param object[] $objects
      */
     private function getObjectManager(array $objects): ObjectManager
     {
         if (null === $this->objectManager) {
-            $class = get_class(current($objects));
+            $obj = current($objects);
+            if (false === $obj) {
+                throw new LogicException('An empty array of objects were passed to this method');
+            }
+
+            $class = get_class($obj);
             $manager = $this->managerRegistry->getManagerForClass($class);
 
             if (null === $manager) {

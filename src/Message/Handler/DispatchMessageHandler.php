@@ -66,6 +66,7 @@ final class DispatchMessageHandler implements MessageHandlerInterface
         $objectManager = $this->getObjectManager($scheduledMessage);
         $objectManager->flush();
 
+        /** @var object $messageToBeDispatched */
         $messageToBeDispatched = unserialize($scheduledMessage->getSerializedMessage(), [
             'allowed_classes' => [ScheduledMessage::class],
         ]);
