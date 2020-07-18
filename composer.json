@@ -26,7 +26,6 @@
         "webmozart/assert": "^1.0"
     },
     "require-dev": {
-        "matthiasnoback/symfony-dependency-injection-test": "^4.1",
         "nyholm/symfony-bundle-test": "^1.6",
         "phpunit/phpunit": "^8.5",
         "roave/security-advisories": "dev-master",
