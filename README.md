@@ -71,7 +71,7 @@ framework:
         routing:
             # Route all command messages to the async transport
             # This presumes that you have already set up an 'async' transport
-            'Setono\SyliusRestockNotificationPlugin\Message\Command\CommandInterface': async
+            'Setono\MessageSchedulerBundle\Message\Command\CommandInterface': async
 ```
 
 ## Usage
