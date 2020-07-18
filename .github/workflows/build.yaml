@@ -13,7 +13,7 @@ jobs:
             matrix:
                 operating-system: [ubuntu-latest]
                 php-versions: ['7.4']
-                composer-args: ['--prefer-lowest --prefer-stable', '']
+                #composer-args: ['--prefer-lowest --prefer-stable', ''] # todo enable this when this PR has been merged: https://github.com/SyliusLabs/CodingStandard/pull/28
         steps:
             -   name: Checkout
                 uses: actions/checkout@v1
