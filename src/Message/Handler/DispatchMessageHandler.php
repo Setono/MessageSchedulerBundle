@@ -80,7 +80,7 @@ final class DispatchMessageHandler implements MessageHandlerInterface
 
         /** @var object $messageToBeDispatched */
         $messageToBeDispatched = unserialize($scheduledMessage->getSerializedMessage(), [
-            'allowed_classes' => [ScheduledMessage::class],
+            'allowed_classes' => true,
         ]);
 
         $stamps = [];
