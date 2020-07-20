@@ -7,9 +7,10 @@ namespace Setono\MessageSchedulerBundle\Message\Handler;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use RuntimeException;
+use Safe\DateTime;
 use function Safe\sprintf;
 use Setono\MessageSchedulerBundle\Entity\ScheduledMessage;
-use Setono\MessageSchedulerBundle\Message\Command\DispatchMessage;
+use Setono\MessageSchedulerBundle\Message\Command\DispatchScheduledMessage;
 use Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepositoryInterface;
 use Setono\MessageSchedulerBundle\Workflow\ScheduledMessageWorkflow;
 use Symfony\Component\Messenger\Envelope;
@@ -44,13 +45,21 @@ final class DispatchMessageHandler implements MessageHandlerInterface
         $this->managerRegistry = $managerRegistry;
     }
 
-    public function __invoke(DispatchMessage $message): void
+    public function __invoke(DispatchScheduledMessage $message): void
     {
         /** @var ScheduledMessage|null $scheduledMessage */
         $scheduledMessage = $this->scheduledMessageRepository->find($message->getScheduledMessageId());
         if (null === $scheduledMessage) {
             throw new UnrecoverableMessageHandlingException(sprintf(
                 'The scheduled message with id, "%s" does not exist', $message->getScheduledMessageId()
+            ));
+        }
+
+        $now = new DateTime();
+        if ($scheduledMessage->getDispatchAt() > $now) {
+            throw new UnrecoverableMessageHandlingException(sprintf(
+                'The scheduled message with id, "%s" is not eligible to be dispatched yet. The dispatch timestamp is %s, while the time now is %s',
+                $message->getScheduledMessageId(), $scheduledMessage->getDispatchAt()->format(\DATE_ATOM), $now->format(\DATE_ATOM)
             ));
         }
 

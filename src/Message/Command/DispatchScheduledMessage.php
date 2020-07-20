@@ -7,7 +7,7 @@ namespace Setono\MessageSchedulerBundle\Message\Command;
 use Setono\MessageSchedulerBundle\Entity\ScheduledMessage;
 use Webmozart\Assert\Assert;
 
-final class DispatchMessage implements CommandInterface
+final class DispatchScheduledMessage implements CommandInterface
 {
     private string $scheduledMessageId;
 

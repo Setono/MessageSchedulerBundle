@@ -9,7 +9,7 @@ use Doctrine\Persistence\ObjectManager;
 use LogicException;
 use RuntimeException;
 use function Safe\sprintf;
-use Setono\MessageSchedulerBundle\Message\Command\DispatchMessage;
+use Setono\MessageSchedulerBundle\Message\Command\DispatchScheduledMessage;
 use Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepositoryInterface;
 use Setono\MessageSchedulerBundle\Workflow\ScheduledMessageWorkflow;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -59,7 +59,7 @@ final class Dispatcher implements DispatcherInterface
             $workflow->apply($message, ScheduledMessageWorkflow::TRANSITION_DISPATCH);
             $objectManager->flush();
 
-            $this->commandBus->dispatch(new DispatchMessage($message));
+            $this->commandBus->dispatch(new DispatchScheduledMessage($message));
         }
     }
 
