@@ -6,6 +6,7 @@
         <service id="setono_message_scheduler.command.dispatch"
                  class="Setono\MessageSchedulerBundle\Command\DispatchCommand">
             <argument type="service" id="setono_message_scheduler.dispatcher.default"/>
+            <tag name="console.command"/>
         </service>
     </services>
 </container>
