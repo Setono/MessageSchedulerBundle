@@ -6,6 +6,7 @@
         <service id="setono_message_scheduler.repository.scheduled_message"
                  class="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepository">
             <argument type="service" id="doctrine"/>
+            <tag name="doctrine.repository_service"/>
         </service>
     </services>
 </container>
