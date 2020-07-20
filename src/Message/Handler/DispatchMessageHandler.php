@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Setono\MessageSchedulerBundle\Message\Handler;
 
+use const DATE_ATOM;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use RuntimeException;
@@ -59,7 +60,7 @@ final class DispatchMessageHandler implements MessageHandlerInterface
         if ($scheduledMessage->getDispatchAt() > $now) {
             throw new UnrecoverableMessageHandlingException(sprintf(
                 'The scheduled message with id, "%s" is not eligible to be dispatched yet. The dispatch timestamp is %s, while the time now is %s',
-                $message->getScheduledMessageId(), $scheduledMessage->getDispatchAt()->format(\DATE_ATOM), $now->format(\DATE_ATOM)
+                $message->getScheduledMessageId(), $scheduledMessage->getDispatchAt()->format(DATE_ATOM), $now->format(DATE_ATOM)
             ));
         }
 
