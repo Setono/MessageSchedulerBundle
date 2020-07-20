@@ -22,6 +22,11 @@ final class DispatchCommand extends Command
         $this->dispatcher = $dispatcher;
     }
 
+    protected function configure(): void
+    {
+        $this->setDescription('Will dispatch messages, that are eligible for dispatching');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->dispatcher->dispatch();
