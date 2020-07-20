@@ -9,6 +9,7 @@
             <argument type="service" id="setono_message_scheduler.repository.scheduled_message"/>
             <argument type="service" id="workflow.registry"/>
             <argument type="service" id="doctrine"/>
+            <tag name="messenger.message_handler"/>
         </service>
     </services>
 </container>
