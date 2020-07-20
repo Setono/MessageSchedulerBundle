@@ -3,6 +3,9 @@
 <container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
+        <service id="Setono\MessageSchedulerBundle\Dispatcher\DispatcherInterface"
+                 alias="setono_message_scheduler.dispatcher.default"/>
+
         <service id="setono_message_scheduler.dispatcher.default"
                  class="Setono\MessageSchedulerBundle\Dispatcher\Dispatcher">
             <argument type="service" id="setono_message_scheduler.command_bus"/>
