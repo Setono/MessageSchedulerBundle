@@ -6,6 +6,7 @@ namespace Setono\MessageSchedulerBundle\Entity;
 
 use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
+use Webmozart\Assert\Assert;
 
 class ScheduledMessage
 {
@@ -41,6 +42,17 @@ class ScheduledMessage
         $this->bus = $bus;
     }
 
+    public static function getStates(): array
+    {
+        return [
+            self::STATE_PENDING => self::STATE_PENDING,
+            self::STATE_DISPATCHED => self::STATE_DISPATCHED,
+            self::STATE_PROCESSING => self::STATE_PROCESSING,
+            self::STATE_SUCCESSFUL => self::STATE_SUCCESSFUL,
+            self::STATE_FAILED => self::STATE_FAILED,
+        ];
+    }
+
     public function getId(): string
     {
         return $this->id;
@@ -66,8 +78,20 @@ class ScheduledMessage
         return $this->state;
     }
 
+    public function setState(string $state): void
+    {
+        Assert::oneOf($state, self::getStates());
+
+        $this->state = $state;
+    }
+
     public function addError(string $error): void
     {
         $this->errors[] = $error;
+    }
+
+    public function resetErrors(): void
+    {
+        $this->errors = [];
     }
 }

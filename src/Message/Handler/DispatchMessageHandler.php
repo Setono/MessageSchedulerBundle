@@ -56,6 +56,8 @@ final class DispatchMessageHandler implements MessageHandlerInterface
             ));
         }
 
+        $scheduledMessage->resetErrors();
+
         $now = new DateTime();
         if ($scheduledMessage->getDispatchAt() > $now) {
             throw new UnrecoverableMessageHandlingException(sprintf(

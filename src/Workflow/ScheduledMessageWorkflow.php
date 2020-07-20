@@ -20,12 +20,6 @@ final class ScheduledMessageWorkflow
 
     public static function getStates(): array
     {
-        return [
-            ScheduledMessage::STATE_PENDING,
-            ScheduledMessage::STATE_DISPATCHED,
-            ScheduledMessage::STATE_PROCESSING,
-            ScheduledMessage::STATE_SUCCESSFUL,
-            ScheduledMessage::STATE_FAILED,
-        ];
+        return ScheduledMessage::getStates();
     }
 }
