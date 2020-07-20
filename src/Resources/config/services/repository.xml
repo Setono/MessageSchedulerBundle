@@ -4,10 +4,12 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepositoryInterface"
-                 alias="setono_message_scheduler.repository.scheduled_message"/>
+                 alias="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepository"/>
 
         <service id="setono_message_scheduler.repository.scheduled_message"
-                 class="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepository">
+                 alias="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepository"/>
+
+        <service id="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepository">
             <argument type="service" id="doctrine"/>
             <tag name="doctrine.repository_service"/>
         </service>
