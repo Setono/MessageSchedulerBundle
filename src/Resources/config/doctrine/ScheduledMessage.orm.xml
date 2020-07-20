@@ -5,7 +5,8 @@
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                                       http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
     <entity name="Setono\MessageSchedulerBundle\Entity\ScheduledMessage"
-            table="setono_message_scheduler__scheduled_message">
+            table="setono_message_scheduler__scheduled_message"
+            repository-class="Setono\MessageSchedulerBundle\Repository\ScheduledMessageRepository">
         <id name="id" type="string"/>
 
         <field name="serializedMessage" type="text"/>
