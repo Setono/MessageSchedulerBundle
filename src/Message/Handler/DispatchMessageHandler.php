@@ -89,6 +89,8 @@ final class DispatchMessageHandler implements MessageHandlerInterface
         }
 
         try {
+            // notice that this try-catch block won't handle (and therefore log) any errors happening,
+            // if the $messageToBeDispatched is routed on an async transport
             $this->routableMessageBus->dispatch(new Envelope($messageToBeDispatched, $stamps));
 
             $workflow->apply($scheduledMessage, ScheduledMessageWorkflow::TRANSITION_SUCCEED);
