@@ -7,8 +7,10 @@ namespace Setono\MessageSchedulerBundle\Message\Handler;
 use const DATE_ATOM;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use InvalidArgumentException;
 use RuntimeException;
 use Safe\DateTime;
+use function Safe\ini_set;
 use function Safe\sprintf;
 use Setono\MessageSchedulerBundle\Entity\ScheduledMessage;
 use Setono\MessageSchedulerBundle\Message\Command\DispatchScheduledMessage;
@@ -78,10 +80,7 @@ final class DispatchMessageHandler implements MessageHandlerInterface
         $objectManager = $this->getObjectManager($scheduledMessage);
         $objectManager->flush();
 
-        /** @var object $messageToBeDispatched */
-        $messageToBeDispatched = unserialize($scheduledMessage->getSerializedMessage(), [
-            'allowed_classes' => true,
-        ]);
+        $messageToBeDispatched = $this->unserialize($scheduledMessage->getSerializedMessage());
 
         $stamps = [];
 
@@ -111,6 +110,49 @@ final class DispatchMessageHandler implements MessageHandlerInterface
 
             throw $originalException;
         }
+    }
+
+    /**
+     * This code is taken from \Symfony\Component\Messenger\Transport\Serialization\PhpSerializer
+     *
+     * todo extract to a separate library
+     */
+    private function unserialize(string $str): object
+    {
+        $signalingException = new InvalidArgumentException(sprintf('Could not decode message using PHP serialization: %s.', $str));
+        $prevUnserializeHandler = ini_set('unserialize_callback_func', self::class . '::handleUnserializeCallback');
+
+        /**
+         * @psalm-suppress MissingClosureParamType
+         * @psalm-suppress MissingClosureReturnType
+         */
+        $prevErrorHandler = set_error_handler(function ($type, $msg, $file, $line, $context = []) use (&$prevErrorHandler, $signalingException) {
+            if (__FILE__ === $file) {
+                throw $signalingException;
+            }
+
+            return null !== $prevErrorHandler ? $prevErrorHandler($type, $msg, $file, $line, $context) : false;
+        });
+
+        try {
+            /** @var object $messageToBeDispatched */
+            $messageToBeDispatched = unserialize($str, [
+                'allowed_classes' => true,
+            ]);
+        } finally {
+            restore_error_handler();
+            ini_set('unserialize_callback_func', $prevUnserializeHandler);
+        }
+
+        return $messageToBeDispatched;
+    }
+
+    /**
+     * @internal
+     */
+    public static function handleUnserializeCallback(string $class): void
+    {
+        throw new InvalidArgumentException(sprintf('Message class "%s" not found during unserialization.', $class));
     }
 
     private function getObjectManager(object $object): ObjectManager
