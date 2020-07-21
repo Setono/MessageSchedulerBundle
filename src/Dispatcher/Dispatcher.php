@@ -7,6 +7,9 @@ namespace Setono\MessageSchedulerBundle\Dispatcher;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use LogicException;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RuntimeException;
 use function Safe\sprintf;
 use Setono\MessageSchedulerBundle\Message\Command\DispatchScheduledMessage;
@@ -16,9 +19,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\Workflow;
 
-final class Dispatcher implements DispatcherInterface
+final class Dispatcher implements DispatcherInterface, LoggerAwareInterface
 {
     private ?ObjectManager $objectManager = null;
+
+    private LoggerInterface $logger;
 
     private MessageBusInterface $commandBus;
 
@@ -34,6 +39,7 @@ final class Dispatcher implements DispatcherInterface
         Registry $workflowRegistry,
         ManagerRegistry $managerRegistry
     ) {
+        $this->logger = new NullLogger();
         $this->commandBus = $commandBus;
         $this->scheduledMessageRepository = $scheduledMessageRepository;
         $this->workflowRegistry = $workflowRegistry;
@@ -45,6 +51,8 @@ final class Dispatcher implements DispatcherInterface
         $messages = $this->scheduledMessageRepository->findDispatchable();
 
         if (count($messages) === 0) {
+            $this->logger->info('No scheduled message are eligible to be dispatched');
+
             return;
         }
 
@@ -53,6 +61,11 @@ final class Dispatcher implements DispatcherInterface
 
         foreach ($messages as $message) {
             if (!$workflow->can($message, ScheduledMessageWorkflow::TRANSITION_DISPATCH)) {
+                $this->logger->info(sprintf(
+                    'Scheduled message with id, %s, could not be dispatched because it was blocked in the transition',
+                    $message->getId()
+                ));
+
                 continue;
             }
 
@@ -60,6 +73,8 @@ final class Dispatcher implements DispatcherInterface
             $objectManager->flush();
 
             $this->commandBus->dispatch(new DispatchScheduledMessage($message));
+
+            $this->logger->info(sprintf('Dispatched scheduled message with id: %s', $message->getId()));
         }
     }
 
@@ -104,5 +119,10 @@ final class Dispatcher implements DispatcherInterface
         }
 
         return $this->objectManager;
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 }
